@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Collaborative Whiteboard</title>
+    <style>
+        body {
+            text-align: center;
+            margin-top: 60px;
+            margin-left: 20px;
+            background: #f40808;
+        }
+    
+        div {
+            color: rgb(244, 235, 235);
+            font-size: 30px;
+            font-weight: bold;
+        }
+    
+        #canvas {
+            border: 5px solid #fcf9f9;
+            width: 1100px;
+            height: 530px;
+            background-color: white;
+        }
+    
+        .btn {
+            margin-left: 10px;
+            margin-top: 20px;
+            background-color: black;
+            border: none;
+            color: rgb(255, 255, 255);
+            padding: 10px 19px;
+            font-size: 10px;
+            cursor: pointer;
+            border-radius: 15px;
+            transition: 0.1s;
+        }
+    
+        /* Style for the eraser button */
+        .eraser-btn {
+            background-color: #ffffff; /* White background for eraser */
+            color: #000000; /* Black text color */
+        }
+    </style>
+    
+</head>
+<body>
+
+    <div>Collaborative Whiteboard</div>
+    <canvas id="canvas" width="1100" height="530"></canvas>
+    <br>
+    <button class="btn" onclick="clearCanvas()">Clear</button>
+    <br>
+    <input type="color" id="colorPicker" onchange="changeColor(event)">
+    <label for="colorPicker">Color</label>
+    <input type="range" id="sizeSlider" min="1" max="10" value="2" onchange="changeSize(event)">
+    <label for="sizeSlider">Size</label>
+
+    <script>
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var isDrawing = false;
+        var currentX = 0;
+        var currentY = 0;
+        var strokeColor = 'black';
+        var strokeWidth = 2;
+
+        canvas.addEventListener('mousedown', function(e) {
+            isDrawing = true;
+            currentX = e.clientX - canvas.offsetLeft;
+            currentY = e.clientY - canvas.offsetTop;
+        });
+
+        canvas.addEventListener('mousemove', function(e) {
+            if (isDrawing === true) {
+                draw(currentX, currentY, e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+                currentX = e.clientX - canvas.offsetLeft;
+                currentY = e.clientY - canvas.offsetTop;
+            }
+        });
+
+        canvas.addEventListener('mouseup', function() {
+            isDrawing = false;
+        });
+
+        function draw(x1, y1, x2, y2) {
+            context.beginPath();
+            context.strokeStyle = strokeColor;
+            context.lineWidth = strokeWidth;
+            context.moveTo(x1, y1);
+            context.lineTo(x2, y2);
+            context.stroke();
+            context.closePath();
+        }
+
+        function clearCanvas() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function changeColor(event) {
+            strokeColor = event.target.value;
+        }
+
+        function changeSize(event) {
+            strokeWidth = event.target.value;
+        }
+        
+    </script>
+</body>
+</html>
